@@ -4,6 +4,11 @@ class EmployeesController < ApplicationController
   def index
     @employees = Employee.search(params[:query]).order(created_at: :desc)
     @pagy, @employees = pagy(@employees)
+
+    respond_to do |format|
+      format.html
+      format.json { render json: { employees: @employees, pagy: @pagy } }
+    end
   end
 
   def show

@@ -42,5 +42,6 @@ The insights are derived using efficient grouped queries in the `InsightsControl
 
 ## 4. User Experience (UX)
 - **Dashboard First**: The HR Manager is greeted with a summary of the workforce.
-- **Searchability**: A unified React `SearchBar` on the employee list allows filtering by Name, Title, or Country instantly. The search logic is implemented via a reusable Rails scope.
+- **Searchability**: A unified React `SearchBar` on the employee list allows filtering by Name, Title, or Country instantly with **Live Search** capabilities. The search logic is implemented via a reusable Rails scope and debounced React state to minimize server load.
+- **Dynamic Updates**: The employee list updates dynamically without full page reloads using React's local state and JSON API endpoints.
 - **Responsive Design**: The UI is mobile-friendly using Tailwind's utility classes.

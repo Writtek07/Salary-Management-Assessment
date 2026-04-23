@@ -1,14 +1,15 @@
 import React from 'react'
 
-const Pagination = ({ pagy }) => {
+const Pagination = ({ pagy, onPageChange }) => {
   const { page, last, prev, next, from, to, count } = pagy
 
   if (last <= 1) return null
 
-  const getPageUrl = (p) => {
-    const url = new URL(window.location.href)
-    url.searchParams.set('page', p)
-    return url.pathname + url.search
+  const handlePageClick = (e, p) => {
+    e.preventDefault()
+    if (onPageChange) {
+      onPageChange(p)
+    }
   }
 
   // Simple logic to generate page numbers
@@ -28,7 +29,8 @@ const Pagination = ({ pagy }) => {
       <div className="flex flex-1 justify-between sm:justify-end items-center">
         {prev ? (
           <a
-            href={getPageUrl(prev)}
+            href="#"
+            onClick={(e) => handlePageClick(e, prev)}
             className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 mr-2"
           >
             Previous
@@ -43,7 +45,8 @@ const Pagination = ({ pagy }) => {
           {pages[0] > 1 && (
             <>
               <a
-                href={getPageUrl(1)}
+                href="#"
+                onClick={(e) => handlePageClick(e, 1)}
                 className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
               >
                 1
@@ -55,7 +58,8 @@ const Pagination = ({ pagy }) => {
           {pages.map((p) => (
             <a
               key={p}
-              href={getPageUrl(p)}
+              href="#"
+              onClick={(e) => handlePageClick(e, p)}
               className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium ${
                 p === page
                   ? 'border-blue-500 text-blue-600'
@@ -71,7 +75,8 @@ const Pagination = ({ pagy }) => {
             <>
               {pages[pages.length - 1] < last - 1 && <span className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-400">...</span>}
               <a
-                href={getPageUrl(last)}
+                href="#"
+                onClick={(e) => handlePageClick(e, last)}
                 className="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700"
               >
                 {last}
@@ -82,7 +87,8 @@ const Pagination = ({ pagy }) => {
 
         {next ? (
           <a
-            href={getPageUrl(next)}
+            href="#"
+            onClick={(e) => handlePageClick(e, next)}
             className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ml-2"
           >
             Next
