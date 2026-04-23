@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.2].define(version: 2026_04_23_065137) do
+ActiveRecord::Schema[7.2].define(version: 2026_04_23_145035) do
   create_table "employees", force: :cascade do |t|
     t.string "full_name", null: false
     t.string "job_title", null: false
@@ -20,6 +20,12 @@ ActiveRecord::Schema[7.2].define(version: 2026_04_23_065137) do
     t.date "hire_date"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["country", "job_title"], name: "index_employees_on_country_and_job_title"
+    t.index ["country"], name: "index_employees_on_country"
     t.index ["email"], name: "index_employees_on_email", unique: true
+    t.index ["full_name"], name: "index_employees_on_full_name"
+    t.index ["hire_date"], name: "index_employees_on_hire_date"
+    t.index ["job_title"], name: "index_employees_on_job_title"
+    t.index ["salary"], name: "index_employees_on_salary"
   end
 end

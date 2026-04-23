@@ -4,23 +4,27 @@ class InsightsController < ApplicationController
     @total_payroll = Employee.sum(:salary)
     @global_avg_salary = Employee.average(:salary)
 
-    @countries = Employee.distinct.pluck(:country)
-    @job_titles = Employee.distinct.pluck(:job_title)
-
-    @salary_by_country = @countries.each_with_object({}) do |country, hash|
-      hash[country] = Employee.salary_metrics_by_country(country)
+    @salary_by_country = Employee.group(:country).select(
+      :country,
+      'MIN(salary) as min_salary',
+      'MAX(salary) as max_salary',
+      'AVG(salary) as avg_salary'
+    ).each_with_object({}) do |record, hash|
+      hash[record.country] = {
+        min: record.min_salary,
+        max: record.max_salary,
+        avg: record.avg_salary
+      }
     end
 
-    @avg_salary_by_job_title_and_country = @countries.each_with_object({}) do |country, hash|
-      hash[country] = @job_titles.each_with_object({}) do |job_title, job_hash|
-        avg = Employee.avg_salary_by_job_title_in_country(job_title, country)
-        job_hash[job_title] = avg if avg
-      end
+    # Grouped query to avoid N+1
+    grouped_averages = Employee.group(:country, :job_title).average(:salary)
+    @avg_salary_by_job_title_and_country = grouped_averages.each_with_object({}) do |((country, job_title), avg), hash|
+      hash[country] ||= {}
+      hash[country][job_title] = avg
     end
 
-    # Additional metric: Salary distribution by job title (global)
-    @global_avg_by_job_title = @job_titles.each_with_object({}) do |job_title, hash|
-      hash[job_title] = Employee.where(job_title: job_title).average(:salary)
-    end
+    # Global average by job title (grouped query)
+    @global_avg_by_job_title = Employee.group(:job_title).average(:salary)
   end
 end

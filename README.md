@@ -31,7 +31,7 @@ SalaryScale is a minimal yet robust salary management application designed for H
 
 4. **Start the Development Server**:
    ```bash
-   bin/dev
+   bin/development_server
    ```
    *Access the app at [http://localhost:3000](http://localhost:3000)*
 
