@@ -1,6 +1,22 @@
 <div class="w-full">
   <h1 class="font-bold text-4xl mb-8">Salary Insights</h1>
 
+  <!-- Summary Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-8">
+    <div class="bg-white shadow rounded-lg p-6 border-l-4 border-blue-500">
+      <p class="text-sm font-medium text-gray-500 uppercase">Total Employees</p>
+      <p class="text-3xl font-bold text-gray-900"><%= number_with_delimiter(@total_employees) %></p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 border-l-4 border-green-500">
+      <p class="text-sm font-medium text-gray-500 uppercase">Total Payroll</p>
+      <p class="text-3xl font-bold text-gray-900"><%= number_to_currency(@total_payroll) %></p>
+    </div>
+    <div class="bg-white shadow rounded-lg p-6 border-l-4 border-purple-500">
+      <p class="text-sm font-medium text-gray-500 uppercase">Global Avg Salary</p>
+      <p class="text-3xl font-bold text-gray-900"><%= number_to_currency(@global_avg_salary) %></p>
+    </div>
+  </div>
+
   <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
     <!-- Metrics by Country -->
     <div class="bg-white shadow rounded-lg p-6">

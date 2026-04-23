@@ -1,5 +1,9 @@
 class InsightsController < ApplicationController
   def index
+    @total_employees = Employee.count
+    @total_payroll = Employee.sum(:salary)
+    @global_avg_salary = Employee.average(:salary)
+
     @countries = Employee.distinct.pluck(:country)
     @job_titles = Employee.distinct.pluck(:job_title)
 
@@ -13,7 +17,7 @@ class InsightsController < ApplicationController
         job_hash[job_title] = avg if avg
       end
     end
-    
+
     # Additional metric: Salary distribution by job title (global)
     @global_avg_by_job_title = @job_titles.each_with_object({}) do |job_title, hash|
       hash[job_title] = Employee.where(job_title: job_title).average(:salary)

@@ -2,7 +2,13 @@ class EmployeesController < ApplicationController
   before_action :set_employee, only: %i[ show edit update destroy ]
 
   def index
-    @employees = Employee.all
+    @employees = Employee.all.order(created_at: :desc)
+
+    if params[:query].present?
+      @employees = @employees.where("full_name LIKE ? OR job_title LIKE ? OR country LIKE ?", "%#{params[:query]}%", "%#{params[:query]}%", "%#{params[:query]}%")
+    end
+
+    @pagy, @employees = pagy(@employees)
   end
 
   def show

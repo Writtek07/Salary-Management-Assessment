@@ -1,9 +1,32 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+puts "Cleaning database..."
+Employee.delete_all
+
+puts "Seeding 10,000 employees..."
+
+countries = ["USA", "UK", "Canada", "Germany", "France", "Japan", "Australia", "India", "Brazil", "Spain"]
+job_titles = ["Software Engineer", "Senior Software Engineer", "Product Manager", "HR Manager", "Designer", "Sales Representative", "Marketing Specialist", "Data Scientist", "Customer Support", "DevOps Engineer"]
+
+employees = []
+
+10_000.times do |i|
+  employees << {
+    full_name: Faker::Name.name,
+    job_title: job_titles.sample,
+    country: countries.sample,
+    salary: Faker::Number.between(from: 30000, to: 200000),
+    email: Faker::Internet.unique.email,
+    hire_date: Faker::Date.between(from: 5.years.ago, to: Date.today),
+    created_at: Time.current,
+    updated_at: Time.current
+  }
+
+  if employees.size >= 1000
+    Employee.insert_all(employees)
+    employees = []
+    puts "Inserted #{i + 1} employees..."
+  end
+end
+
+Employee.insert_all(employees) unless employees.empty?
+
+puts "Seeding completed! Total employees: #{Employee.count}"
