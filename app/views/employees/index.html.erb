@@ -3,7 +3,7 @@
     <p class="py-2 px-3 bg-green-50 mb-5 text-green-700 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
   <% end %>
 
-  <div id="employee-list" data-props="<%= { employees: @employees, pagy: @pagy }.to_json %>">
+  <div id="employee-list" data-props="<%= { employees: @employees, pagy: @pagy, query: params[:query] }.to_json %>">
     <div class="flex justify-between items-center mb-6">
       <h1 class="font-bold text-4xl">Employees</h1>
       <%= link_to 'New employee', new_employee_path, class: "rounded-lg py-3 px-5 bg-blue-600 text-white font-medium" %>

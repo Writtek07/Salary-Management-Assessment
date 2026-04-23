@@ -28,6 +28,13 @@ RSpec.describe "Employees", type: :request do
       expect(response).to be_successful
       expect(response.body).to include(employee.full_name)
     end
+
+    it "filters employees by search query" do
+      other_employee = create(:employee, full_name: "Unique Name")
+      get employees_path, params: { query: "Unique" }
+      expect(response.body).to include("Unique Name")
+      expect(response.body).not_to include(employee.full_name)
+    end
   end
 
   describe "GET /employees/:id" do

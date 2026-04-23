@@ -7,6 +7,14 @@ class Employee < ApplicationRecord
   validates :hire_date, presence: true
   validate :hire_date_cannot_be_in_the_future
 
+  scope :search, ->(query) {
+    if query.present?
+      where("full_name LIKE :q OR job_title LIKE :q OR country LIKE :q", q: "%#{query}%")
+    else
+      all
+    end
+  }
+
   private
 
   def hire_date_cannot_be_in_the_future

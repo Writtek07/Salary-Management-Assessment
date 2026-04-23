@@ -1,13 +1,16 @@
 import React from 'react'
 import Pagination from './Pagination'
+import SearchBar from './SearchBar'
 
-const EmployeeList = ({ employees, pagy }) => {
+const EmployeeList = ({ employees, pagy, query }) => {
   return (
     <div className="w-full">
       <div className="flex justify-between items-center mb-6">
         <h1 className="font-bold text-4xl">Employees</h1>
         <a href="/employees/new" className="rounded-lg py-3 px-5 bg-blue-600 text-white font-medium">New employee</a>
       </div>
+
+      <SearchBar initialQuery={query} />
 
       <div className="bg-white shadow rounded-lg overflow-hidden">
         <table className="min-w-full divide-y divide-gray-200">
