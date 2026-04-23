@@ -1,0 +1,55 @@
+<%# Render pagination only if there are multiple pages %>
+<% if pagy.pages > 1 %>
+  <nav class="flex items-center justify-between border-t border-gray-200 px-4 py-3 sm:px-0 mt-8" aria-label="Pagination">
+    <div class="hidden sm:block">
+      <p class="text-sm text-gray-700">
+        Showing
+        <span class="font-medium"><%= pagy.from %></span>
+        to
+        <span class="font-medium"><%= pagy.to %></span>
+        of
+        <span class="font-medium"><%= pagy.count %></span>
+        results
+      </p>
+    </div>
+    <div class="flex flex-1 justify-between sm:justify-end">
+      <% if pagy.prev %>
+        <%= link_to pagy_url_for(pagy, pagy.prev), class: "relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 mr-2" do %>
+          Previous
+        <% end %>
+      <% else %>
+        <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-400 mr-2 cursor-not-allowed">
+          Previous
+        </span>
+      <% end %>
+
+      <div class="hidden md:-mt-px md:flex">
+        <% pagy.series.each do |item| %>
+          <% if item.is_a?(Integer) %>
+            <%= link_to pagy_url_for(pagy, item), class: "inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-500 hover:border-gray-300 hover:text-gray-700" do %>
+              <%= item %>
+            <% end %>
+          <% elsif item.is_a?(String) %>
+            <span class="inline-flex items-center border-t-2 border-blue-500 px-4 pt-4 text-sm font-medium text-blue-600" aria-current="page">
+              <%= item %>
+            </span>
+          <% elsif item == :gap %>
+            <span class="inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium text-gray-400">
+              ...
+            </span>
+          <% end %>
+        <% end %>
+      </div>
+
+      <% if pagy.next %>
+        <%= link_to pagy_url_for(pagy, pagy.next), class: "relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 ml-2" do %>
+          Next
+        <% end %>
+      <% else %>
+        <span class="relative inline-flex items-center rounded-md border border-gray-300 bg-gray-100 px-4 py-2 text-sm font-medium text-gray-400 ml-2 cursor-not-allowed">
+          Next
+        </span>
+      <% end %>
+    </div>
+  </nav>
+<% end %>

@@ -50,7 +50,5 @@
     </table>
   </div>
 
-  <div class="mt-8 flex justify-center">
-    <%== pagy_nav(@pagy) %>
-  </div>
+  <%= render "shared/pagination", pagy: @pagy %>
 </div>
