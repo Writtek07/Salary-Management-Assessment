@@ -4,4 +4,17 @@ class Employee < ApplicationRecord
   validates :country, presence: true
   validates :salary, presence: true, numericality: { greater_than: 0 }
   validates :email, presence: true, uniqueness: { case_sensitive: false }, format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  def self.salary_metrics_by_country(country)
+    records = where(country: country)
+    {
+      min: records.minimum(:salary),
+      max: records.maximum(:salary),
+      avg: records.average(:salary)
+    }
+  end
+
+  def self.avg_salary_by_job_title_in_country(job_title, country)
+    where(job_title: job_title, country: country).average(:salary)
+  end
 end
