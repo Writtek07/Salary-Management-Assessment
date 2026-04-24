@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   root "employees#index"
   resources :employees
-  get "insights/index"
+  resources :insights, only: :index
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

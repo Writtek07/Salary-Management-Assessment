@@ -7,6 +7,10 @@ gem "sprockets-rails"
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", ">= 1.4", groups: [ :development, :test ]
 
+# Use ESM import maps in browsers [https://github.com/rails/importmap-rails]
+# Only using for CI step scan_js to check vulnerable dependencies
+gem "importmap-rails"
+
 # Use postgres as the database for production
 gem "pg", groups: [ :production ]
 # Use the Puma web server [https://github.com/puma/puma]
@@ -51,9 +55,9 @@ group :development, :test do
 
   gem "rspec-rails"
   gem "factory_bot_rails"
+  gem "faker"
 end
 
-gem "faker"
 gem "pagy", "~> 9.3"
 
 group :test do

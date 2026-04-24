@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'nokogiri'
 
 RSpec.describe "Employees", type: :request do
   let!(:employee) { create(:employee) }
@@ -26,14 +27,26 @@ RSpec.describe "Employees", type: :request do
     it "renders a successful response" do
       get employees_path
       expect(response).to be_successful
-      expect(response.body).to include(employee.full_name)
+      doc = Nokogiri::HTML(response.body)
+      props_json = doc.at_css("#employee-list")&.[]("data-props")
+      expect(props_json).to be_present
+
+      props = JSON.parse(props_json)
+      full_names = props.fetch("employees").map { |e| e.fetch("full_name") }
+      expect(full_names).to include(employee.full_name)
     end
 
     it "filters employees by search query" do
       other_employee = create(:employee, full_name: "Unique Name")
       get employees_path, params: { query: "Unique" }
-      expect(response.body).to include("Unique Name")
-      expect(response.body).not_to include(employee.full_name)
+      doc = Nokogiri::HTML(response.body)
+      props_json = doc.at_css("#employee-list")&.[]("data-props")
+      expect(props_json).to be_present
+
+      props = JSON.parse(props_json)
+      full_names = props.fetch("employees").map { |e| e.fetch("full_name") }
+      expect(full_names).to include(other_employee.full_name)
+      expect(full_names).not_to include(employee.full_name)
     end
   end
 
@@ -41,7 +54,7 @@ RSpec.describe "Employees", type: :request do
     it "renders a successful response" do
       get employee_path(employee)
       expect(response).to be_successful
-      expect(response.body).to include(employee.full_name)
+      expect(Nokogiri::HTML(response.body).text).to include(employee.full_name)
     end
   end
 

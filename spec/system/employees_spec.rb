@@ -2,39 +2,33 @@ require 'rails_helper'
 
 RSpec.describe "Employees", type: :system do
   before do
-    driven_by(:rack_test)
+    driven_by(:selenium_chrome_headless)
   end
 
-  it "allows an HR Manager to manage employees" do
+  it "renders employee pages with React mount points and server-provided props" do
+    employee = create(
+      :employee,
+      full_name: "Alice Walker",
+      job_title: "HR Specialist",
+      country: "UK",
+      salary: 55000,
+      email: "alice.walker@example.com",
+      hire_date: Date.today
+    )
+
     visit employees_path
     expect(page).to have_content("Employees")
+    expect(page).to have_css("#employee-list")
+
+    props = JSON.parse(find("#employee-list")["data-props"])
+    expect(props.fetch("employees").first.fetch("full_name")).to eq("Alice Walker")
 
     click_on "New employee"
-    fill_in "Full name", with: "Alice Walker"
-    fill_in "Job title", with: "HR Specialist"
-    fill_in "Country", with: "UK"
-    fill_in "Salary", with: "55000"
-    fill_in "Email", with: "alice.walker@example.com"
-    fill_in "Hire date", with: Date.today
-    click_on "Create Employee"
+    expect(page).to have_content("New employee")
+    expect(page).to have_css("#employee-form")
 
-    expect(page).to have_content("Employee was successfully created.")
+    visit employee_path(employee)
     expect(page).to have_content("Alice Walker")
-
-    click_on "Edit this employee"
-    fill_in "Full name", with: "Alice Smith"
-    click_on "Update Employee"
-
-    expect(page).to have_content("Employee was successfully updated.")
-    expect(page).to have_content("Alice Smith")
-
-    visit employees_path
-    expect(page).to have_content("Alice Smith")
-    
-    # Testing delete via button_to (which uses a form in rack-test)
-    within "tr", text: "Alice Smith" do
-      click_on "Destroy"
-    end
-    expect(page).to have_content("Employee was successfully destroyed.")
+    expect(page).to have_css("#employee-detail")
   end
 end

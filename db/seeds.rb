@@ -6,8 +6,8 @@ puts "Seeding 10,000 employees..."
 first_names = File.readlines(Rails.root.join("first_names.txt")).map(&:strip).reject(&:empty?)
 last_names = File.readlines(Rails.root.join("last_names.txt")).map(&:strip).reject(&:empty?)
 
-countries = ["USA", "UK", "Canada", "Germany", "France", "Japan", "Australia", "India", "Brazil", "Spain"]
-job_titles = ["Software Engineer", "Senior Software Engineer", "Product Manager", "HR Manager", "Designer", "Sales Representative", "Marketing Specialist", "Data Scientist", "Customer Support", "DevOps Engineer"]
+countries = [ "USA", "UK", "Canada", "Germany", "France", "Japan", "Australia", "India", "Brazil", "Spain" ]
+job_titles = [ "Software Engineer", "Senior Software Engineer", "Product Manager", "HR Manager", "Designer", "Sales Representative", "Marketing Specialist", "Data Scientist", "Customer Support", "DevOps Engineer" ]
 
 employees = []
 

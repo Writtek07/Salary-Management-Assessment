@@ -6,9 +6,9 @@ class InsightsController < ApplicationController
 
     @salary_by_country = Employee.group(:country).select(
       :country,
-      'MIN(salary) as min_salary',
-      'MAX(salary) as max_salary',
-      'AVG(salary) as avg_salary'
+      "MIN(salary) as min_salary",
+      "MAX(salary) as max_salary",
+      "AVG(salary) as avg_salary"
     ).each_with_object({}) do |record, hash|
       hash[record.country] = {
         min: record.min_salary,

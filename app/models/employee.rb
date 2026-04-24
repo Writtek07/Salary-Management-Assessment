@@ -8,11 +8,20 @@ class Employee < ApplicationRecord
   validate :hire_date_cannot_be_in_the_future
 
   scope :search, ->(query) {
-    if query.present?
-      where("full_name LIKE :q OR job_title LIKE :q OR country LIKE :q", q: "%#{query}%")
-    else
-      all
-    end
+    return all if query.blank?
+
+    # Sanitize query to escape SQL wildcards (% and _)
+    # Arel's matches handles SQL injection via parameter binding,
+    # but we must manually escape characters that have special meaning in LIKE patterns.
+    escaped_query = query.to_s.gsub(/[%_\\]/) { |c| "\\#{c}" }
+    pattern = "%#{escaped_query}%"
+
+    t = arel_table
+    where(
+      t[:full_name].matches(pattern, "\\")
+        .or(t[:job_title].matches(pattern, "\\"))
+        .or(t[:country].matches(pattern, "\\"))
+    )
   }
 
   private

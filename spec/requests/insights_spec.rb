@@ -1,4 +1,5 @@
 require 'rails_helper'
+require 'nokogiri'
 
 RSpec.describe "Insights", type: :request do
   describe "GET /insights/index" do
@@ -9,28 +10,29 @@ RSpec.describe "Insights", type: :request do
     end
 
     it "renders a successful response and displays correct metrics" do
-      get insights_index_path
+      get insights_url
       expect(response).to be_successful
       expect(response.body).to include("Salary Insights")
 
-      # Summary metrics
-      expect(response.body).to include("3") # Total employees
-      expect(response.body).to include("$300,000.00") # Total payroll (100+120+80)
-      expect(response.body).to include("$100,000.00") # Global avg (300/3)
+      doc = Nokogiri::HTML(response.body)
+      props_json = doc.at_css('#insights-root')&.[]('data-props')
+      expect(props_json).to be_present
 
-      # Metrics by country (USA)
-      expect(response.body).to include("USA")
-      expect(response.body).to include("$100,000.00") # Min
-      expect(response.body).to include("$120,000.00") # Max
-      expect(response.body).to include("$110,000.00") # Avg
+      props = JSON.parse(props_json)
+      expect(props.fetch('total_employees')).to eq(3)
 
-      # Metrics by country (Canada)
-      expect(response.body).to include("Canada")
-      expect(response.body).to include("$80,000.00")
+      expect(props.fetch('total_payroll').to_f).to eq(300000.0)
+      expect(props.fetch('global_avg_salary').to_f).to eq(100000.0)
 
-      # Avg Salary by Job Title & Country
-      expect(response.body).to include("Engineer")
-      expect(response.body).to include("Designer")
+      salary_by_country = props.fetch('salary_by_country')
+      expect(salary_by_country.fetch('USA').fetch('min')).to eq(100000)
+      expect(salary_by_country.fetch('USA').fetch('max')).to eq(120000)
+      expect(salary_by_country.fetch('USA').fetch('avg').to_f).to eq(110000.0)
+      expect(salary_by_country.fetch('Canada').fetch('min')).to eq(80000)
+
+      avg_salary_by_job_title_and_country = props.fetch('avg_salary_by_job_title_and_country')
+      expect(avg_salary_by_job_title_and_country.fetch('USA').fetch('Engineer').to_f).to eq(110000.0)
+      expect(avg_salary_by_job_title_and_country.fetch('Canada').fetch('Designer').to_f).to eq(80000.0)
     end
   end
 end
