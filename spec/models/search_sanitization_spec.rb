@@ -8,7 +8,7 @@ RSpec.describe "Search Sanitization", type: :model do
     let!(:underscore_employee) { create(:employee, full_name: "Underscore_User", job_title: "QA", country: "USA") }
 
     it "escapes percentage signs" do
-      # If not escaped, '%' would match everything. 
+      # If not escaped, '%' would match everything.
       # With proper escaping, it should only match the employee with '%' in their name.
       results = Employee.search("%")
       expect(results).to include(special_employee)
@@ -21,12 +21,12 @@ RSpec.describe "Search Sanitization", type: :model do
       # With proper escaping, it should only match the employee with '_' in their name.
       results = Employee.search("_")
       expect(results).to include(underscore_employee)
-      expect(results).not_to include(employee1) # "John Doe" has a space, but "Jane Smith" doesn't. 
-                                              # Actually "John Doe" has 'o' in it, so "J_hn" would match "John".
-                                              # But "_" alone matches any single character. 
-                                              # "John Doe" is 8 chars, "Jane Smith" is 10.
-                                              # So "_" wouldn't match them anyway. 
-                                              # Let's try something more specific.
+      expect(results).not_to include(employee1) # "John Doe" has a space, but "Jane Smith" doesn't.
+      # Actually "John Doe" has 'o' in it, so "J_hn" would match "John".
+      # But "_" alone matches any single character.
+      # "John Doe" is 8 chars, "Jane Smith" is 10.
+      # So "_" wouldn't match them anyway.
+      # Let's try something more specific.
     end
 
     it "escapes backslashes" do
@@ -35,9 +35,9 @@ RSpec.describe "Search Sanitization", type: :model do
       expect(results).to include(backslash_employee)
       expect(results).not_to include(employee1)
     end
-    
+
     it "handles malicious SQL-like characters safely" do
-      # Arel's .matches uses bind parameters or properly escaped strings, 
+      # Arel's .matches uses bind parameters or properly escaped strings,
       # so SQL injection is generally prevented. This is just to confirm.
       results = Employee.search("' OR 1=1 --")
       expect(results).to be_empty
