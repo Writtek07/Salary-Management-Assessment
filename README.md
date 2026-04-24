@@ -80,8 +80,8 @@ We maintain high code quality standards using a TDD approach with RSpec.
 
 ### Artifacts
 For a deeper dive into our process, please see:
-- [DESIGN.md](file:///Users/fci/Documents/Salary Management Assessment/DESIGN.md): Detailed architecture and design rationale.
-- [AI_COLLABORATION.md](file:///Users/fci/Documents/Salary Management Assessment/AI_COLLABORATION.md): Documentation of our AI-driven development strategy and prompts used.
+- [DESIGN.md]: Detailed architecture and design rationale.
+- [AI_COLLABORATION.md]: Documentation of our AI-driven development strategy and prompts used.
 
 ---
 
